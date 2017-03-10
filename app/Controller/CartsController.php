@@ -1,10 +1,7 @@
 <?php
 class CartsController extends AppController{
     public $components = array('Flash' , 'Session' , 'Cookie');
-
-    ######################################  ADD CART  #########################################
-
-
+    
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Cookie->name = 'crt';
@@ -16,6 +13,9 @@ class CartsController extends AppController{
         #$this->Cookie->httpOnly = true;
         $this->Cookie->type('aes');
     }
+
+	
+######################################  ADD CART  #########################################
 
     public function addcrt($id){
 
