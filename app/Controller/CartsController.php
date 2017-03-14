@@ -36,6 +36,7 @@ class CartsController extends AppController{
             $this->request->data['Cart']['user_id'] = 0;
             $this->request->data['Cart']['product_id'] = $id;
             $this->Cart->save($this->request->data);
+			$this->redirect(array('controller'=>'products','action'=>'index'));
         }
 
     }
@@ -46,42 +47,46 @@ class CartsController extends AppController{
 		
 		// Only accessible via requestAction()		
 			
-		if($this->Session->check('Auth.User')) {
-				
+		if($this->Session->check('Auth.User')) {				
 			$authuserid = $this->Session->read('Auth.User.id');			
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id ' => $authuserid)));
 			$countdata = sizeof($cartdata);
 			#$this->set('countdata',$countdata);
-			return $countdata;
-			#$this->layout('ajax');
+			return $countdata;			
 			#echo '<pre>';
 			#echo $countdata;
 			#echo '</pre>';
 			#return $countdata;
 		}
-		else{
+		else{   
+
+			$ckvals = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));   ####ckval is holding cookies values
+			foreach($ckvals as $ckval){
+				if( $this->Cookie->check($ckval['Cart']['ck_val']) ){
+					
+				}
+				else{
+					$this->Cart->delete($ckval['Cart']['id']);
+					#echo '<pre>';
+					#print_r ($ckvals);
+					#echo $ckval['Cart']['ck_val'];
+					#echo '</pre>';
+				}
+			
+				#if( !$this->Cookie->check($crtdata['Cart']['ck_val']) ){
+					#$this->Cart->delete($crtdata['Cart']['id']);
+				#}				
+			}
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
 			$countdata = sizeof($cartdata);
+	
 			#echo '<pre>';
-			#echo $countdata;
+			#print_r ($cartdata);
 			#echo '</pre>';
-			return $countdata;			
-		}
-		
-        /*if($this->Session->check('Auth.User')) {
-            $authuserid = $this->Session->read('Auth.User.id');			
-            $cartdata = $this->Cart->find('all',array('conditions'=>array('user_id ' => $authuserid)));
-            $countdata = sizeof($cartdata);
-			$this->set('countdata',$countdata);
-			#$this->layout('ajax');		
-            #return $countdata;
-        }
-        else{
-            $cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
-            $countdata = sizeof($cartdata);
-            
-            return $countdata;
-        }*/
+			
+			return $countdata;
+					
+		}		     
     }
 }
 ?>
