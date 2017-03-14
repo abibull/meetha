@@ -98,15 +98,13 @@
 
         <!---------------------------------------  SEARCH and CART ------------------------------------------>
 
-        <div class="navbar-collapse collapse right">
-			
+        <div class="navbar-collapse collapse right">			
 		
             <?php
 				$count = $this->requestAction(array('controller' => 'carts', 'action' => 'showitemsincart'));
-				echo $count;
-                echo $this->Html->link('<i class="fa fa-shopping-cart"></i><span class="hidden-sm">'.$count.'items in cart</span>',
+				#echo $count;
+                echo $this->Html->link('<i class="fa fa-shopping-cart"></i><span class="hidden-sm">'.$count.' items in cart</span>',
                 array('controller'=>'','action'=>''),array('escape'=>false,'class'=>'btn btn-primary nav-btn'));
-
             ?>
         </div>
     </div>

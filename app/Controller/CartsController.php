@@ -62,9 +62,9 @@ class CartsController extends AppController{
 		else{
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
 			$countdata = sizeof($cartdata);
-			echo '<pre>';
-			echo $countdata;
-			echo '</pre>';
+			#echo '<pre>';
+			#echo $countdata;
+			#echo '</pre>';
 			return $countdata;			
 		}
 		
