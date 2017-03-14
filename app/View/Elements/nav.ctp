@@ -99,9 +99,12 @@
         <!---------------------------------------  SEARCH and CART ------------------------------------------>
 
         <div class="navbar-collapse collapse right">
+			
+		
             <?php
-
-                echo $this->Html->link('<i class="fa fa-shopping-cart"></i><span class="hidden-sm"> items in cart</span>',
+				$count = $this->requestAction(array('controller' => 'carts', 'action' => 'showitemsincart'));
+				echo $count;
+                echo $this->Html->link('<i class="fa fa-shopping-cart"></i><span class="hidden-sm">'.$count.'items in cart</span>',
                 array('controller'=>'','action'=>''),array('escape'=>false,'class'=>'btn btn-primary nav-btn'));
 
             ?>
@@ -109,3 +112,13 @@
     </div>
     <!------- container ---------->
 </nav>
+
+
+<!--script>
+	$.ajax({
+		url: '/carts/showitemsincart',
+		success: function (result) {
+			$('#myelement').html(result);
+		}		
+	});
+</script-->

@@ -43,21 +43,45 @@ class CartsController extends AppController{
 ################################# Show Carts ITEMS ##########################################
 
     public function showitemsincart(){
-        if($this->Session->check('Auth.User')) {
-            $authuserid = $this->Session->read('Auth.User.id');
-            $cartdata = $this->Cart->find('all',array('user_id' => $authuserid));
+		
+		// Only accessible via requestAction()		
+			
+		if($this->Session->check('Auth.User')) {
+				
+			$authuserid = $this->Session->read('Auth.User.id');			
+			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id ' => $authuserid)));
+			$countdata = sizeof($cartdata);
+			#$this->set('countdata',$countdata);
+			return $countdata;
+			#$this->layout('ajax');
+			#echo '<pre>';
+			#echo $countdata;
+			#echo '</pre>';
+			#return $countdata;
+		}
+		else{
+			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
+			$countdata = sizeof($cartdata);
+			echo '<pre>';
+			echo $countdata;
+			echo '</pre>';
+			return $countdata;			
+		}
+		
+        /*if($this->Session->check('Auth.User')) {
+            $authuserid = $this->Session->read('Auth.User.id');			
+            $cartdata = $this->Cart->find('all',array('conditions'=>array('user_id ' => $authuserid)));
             $countdata = sizeof($cartdata);
-            return $countdata;
+			$this->set('countdata',$countdata);
+			#$this->layout('ajax');		
+            #return $countdata;
         }
         else{
-            $cartdata = $this->Cart->find('all',array('user_id' => 0));
-
+            $cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
             $countdata = sizeof($cartdata);
-            echo '<pre>';
-            echo $countdata;
-            echo '</pre>';
+            
             return $countdata;
-        }
+        }*/
     }
 }
 ?>
