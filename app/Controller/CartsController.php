@@ -6,6 +6,7 @@ class CartsController extends AppController{
         parent::beforeFilter();
         $this->Cookie->name = 'crt';
         $this->Cookie->time = 1296000;  //  '15 DAYS'
+		#$this->Cookie->time = 1800; // for 30 mins
         #$this->Cookie->path = '/bakers/preferences/';
         #$this->Cookie->domain = '';
         #$this->Cookie->secure = true;  // i.e. only sent if using secure HTTPS
@@ -62,20 +63,9 @@ class CartsController extends AppController{
 
 			$ckvals = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));   ####ckval is holding cookies values
 			foreach($ckvals as $ckval){
-				if( $this->Cookie->check($ckval['Cart']['ck_val']) ){
-					
-				}
-				else{
+				if( !$this->Cookie->check($ckval['Cart']['ck_val']) ){
 					$this->Cart->delete($ckval['Cart']['id']);
-					#echo '<pre>';
-					#print_r ($ckvals);
-					#echo $ckval['Cart']['ck_val'];
-					#echo '</pre>';
-				}
-			
-				#if( !$this->Cookie->check($crtdata['Cart']['ck_val']) ){
-					#$this->Cart->delete($crtdata['Cart']['id']);
-				#}				
+				}												
 			}
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
 			$countdata = sizeof($cartdata);
