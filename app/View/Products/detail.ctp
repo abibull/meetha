@@ -16,10 +16,10 @@
 
                     <h1 class="text-center"><?php echo $list['Product']['title'];?></h1>
                     <h4 class="text-center"><?php echo $list['Product']['packsizeingm'];?>gm - <i class="fa fa-inr"></i> <?php echo $list['Product']['price'];?></h4>
-
+					
                     <p class="text-center buttons">
-                        <a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                        <a href="#" class="btn btn-default"><i class="fa fa-heart"></i> Add to wishlist</a>
+						<?php echo $this->Html->link('ADD TO CART',array('controller'=>'carts','action'=>'addcrt',$list['Product']['id']),array('class'=>'btn btn-primary'));?>
+                        <?php echo $this->Html->link('BUY NOW', array('controller'=>'','action'=>''),array('class'=>'btn btn-warning'));?>						                       
                     </p>
                     <h5>Check Availability & COD</h5>
                     <div class="input-group">

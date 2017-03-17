@@ -53,7 +53,7 @@
         <?php echo $this->element('foot');?>
 	</div>
 
-	<?php echo $this->element('sql_dump'); ?>
+	<!--php echo $this->element('sql_dump'); -->
 
 
 	<?php

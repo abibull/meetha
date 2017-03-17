@@ -22,7 +22,7 @@
                     <span class="sr-only">Toggle search</span>
                     <i class="fa fa-search"></i>
                 </button>
-                <?php echo $this->Html->link('<i class="fa fa-shopping-cart"></i>  <span class="hidden-xs"></span>',array('controller'=>'','action'=>''),array('escape'=>false,'class'=>'btn btn-default navbar-toggle')); ?>
+                <?php echo $this->Html->link('<i class="fa fa-shopping-cart"></i>  <span class="hidden-xs"></span>',array('controller'=>'','action'=>''),array('escape'=>false,'class'=>'btn btn-default navbar-toggle'));?>
             </div>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->

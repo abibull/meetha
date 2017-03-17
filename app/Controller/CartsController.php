@@ -13,6 +13,9 @@ class CartsController extends AppController{
         $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
         #$this->Cookie->httpOnly = true;
         $this->Cookie->type('aes');
+		
+		######################### Delete data which have older by 45 days from carts #####################
+		$this->Cart->query('Delete from carts where modified < date_sub(now(),interval 45 day);');
     }
 
 	
@@ -47,20 +50,14 @@ class CartsController extends AppController{
     public function showitemsincart(){
 		
 		// Only accessible via requestAction()		
-			
+						
 		if($this->Session->check('Auth.User')) {				
 			$authuserid = $this->Session->read('Auth.User.id');			
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id ' => $authuserid)));
-			$countdata = sizeof($cartdata);
-			#$this->set('countdata',$countdata);
-			return $countdata;			
-			#echo '<pre>';
-			#echo $countdata;
-			#echo '</pre>';
-			#return $countdata;
+			$countdata = sizeof($cartdata);			
+			return $countdata;						
 		}
 		else{   
-
 			$ckvals = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));   ####ckval is holding cookies values
 			foreach($ckvals as $ckval){
 				if( !$this->Cookie->check($ckval['Cart']['ck_val']) ){
@@ -68,12 +65,10 @@ class CartsController extends AppController{
 				}												
 			}
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
-			$countdata = sizeof($cartdata);
-	
+			$countdata = sizeof($cartdata);	
 			#echo '<pre>';
 			#print_r ($cartdata);
-			#echo '</pre>';
-			
+			#echo '</pre>';			
 			return $countdata;
 					
 		}		     
