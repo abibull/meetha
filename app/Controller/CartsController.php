@@ -4,6 +4,7 @@ class CartsController extends AppController{
     
     public function beforeFilter() {
         parent::beforeFilter();
+		$this->Auth->allow('delete');
         $this->Cookie->name = 'crt';
         $this->Cookie->time = 1296000;  //  '15 DAYS'
 		#$this->Cookie->time = 1800; // for 30 mins
@@ -14,8 +15,9 @@ class CartsController extends AppController{
         #$this->Cookie->httpOnly = true;
         $this->Cookie->type('aes');
 		
-		######################### Delete data which have older by 45 days from carts #####################
-		$this->Cart->query('Delete from carts where modified < date_sub(now(),interval 45 day);');
+		
+		
+		
     }
 
 	
@@ -29,7 +31,7 @@ class CartsController extends AppController{
             $this->request->data['Cart']['user_id'] = $this->Session->read('Auth.User.id');
             $this->request->data['Cart']['product_id'] = $id;
             $this->Cart->save($this->request->data);
-
+			$this->redirect(array('controller'=>'carts','action'=>'basket'));
         }
         else{
             $ck_val = uniqid();
@@ -39,15 +41,17 @@ class CartsController extends AppController{
             $this->request->data['Cart']['ck_val'] = $ck_val;
             $this->request->data['Cart']['user_id'] = 0;
             $this->request->data['Cart']['product_id'] = $id;
-            $this->Cart->save($this->request->data);
-			$this->redirect(array('controller'=>'products','action'=>'index'));
+            $this->Cart->save($this->request->data);			
         }
-
+		$this->redirect(array('controller'=>'carts','action'=>'basket'));
     }
 
-################################# Show Carts ITEMS ##########################################
+################################# Show Number of items in Carts ##########################################
 
     public function showitemsincart(){
+		
+		######################### Delete data which have older by 45 days from carts #####################
+		$this->Cart->query('Delete from carts where modified < date_sub(now(),interval 45 day);');
 		
 		// Only accessible via requestAction()		
 						
@@ -58,20 +62,47 @@ class CartsController extends AppController{
 			return $countdata;						
 		}
 		else{   
-			$ckvals = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));   ####ckval is holding cookies values
+			$ckvals = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));   ####ckval holds cookies values
 			foreach($ckvals as $ckval){
 				if( !$this->Cookie->check($ckval['Cart']['ck_val']) ){
 					$this->Cart->delete($ckval['Cart']['id']);
 				}												
 			}
 			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
-			$countdata = sizeof($cartdata);	
-			#echo '<pre>';
-			#print_r ($cartdata);
-			#echo '</pre>';			
-			return $countdata;
-					
+			$countdata = sizeof($cartdata);				
+			return $countdata;					
 		}		     
     }
+	
+############################## BASKET ############################	
+
+	public function basket(){
+		if($this->Session->check('Auth.User')){
+			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => $this->Session->read('Auth.User.id'))));
+			$this->loadModel('Product');
+			$contents = $this->Product->find('all',array('conditions'=>array('id'=>array_values($crtid))));
+			$this->set('contents',$contents);
+		}
+		else{			
+			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => 0)));
+			$this->loadModel('Product');
+			$contents = $this->Product->find('all' , array('conditions' => array('id' => array_values($crtid))));
+			$this->set('contents',$contents);
+			#echo '<pre>';
+			#print_r ($contents);
+			#echo '</pre>';	
+		}
+	}
+	
+	public function delete($id ){
+		if($this->Session->check('Auth.User')){
+			$crtid = $this->Cart->find('list',array('conditions'=>array('product_id'=>$id,'user_id'=>$this->Session->read('Auth.User.id'))));
+			$this->Cart->delete($crtid);
+		}else{
+			$this->Cart->delete($this->Cart->find('list',array('conditions'=>array('product_id'=>$id,'user_id'=>0))));			
+		}
+		$this->redirect(array('controller'=>'carts','action'=>'basket'));
+	}
+
 }
 ?>

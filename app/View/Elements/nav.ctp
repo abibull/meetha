@@ -19,7 +19,7 @@
 				
                 <?php 
 				$count = $this->requestAction(array('controller' => 'carts', 'action' => 'showitemsincart'));
-				echo $this->Html->link('<span class="badge">'.$count.'</span><i class="fa fa-shopping-cart"></i>',array('controller'=>'','action'=>''),
+				echo $this->Html->link('<span class="badge">'.$count.'</span><i class="fa fa-shopping-cart"></i>',array('controller'=>'carts','action'=>'basket'),
 				array('escape'=>false,'class'=>'btn btn-primary nav-btn navbar-toggle'));
 				?>
             </div>
@@ -28,9 +28,9 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="navigation">
             <ul class="nav navbar-nav">
-                <li>
+                <!--li>
                     <?php echo $this->Html->link('Home' , array('controller'=> 'products' , 'action'=>'index'));?>
-                </li>
+                </li-->
                 <li>
                     <?php echo $this->Html->link('Sweets' , array('controller'=> 'products' , 'action'=>'index'));?>
                 </li>
@@ -100,7 +100,7 @@
 			$count = $this->requestAction(array('controller' => 'carts', 'action' => 'showitemsincart'));
 			                				
 			echo $this->Html->link('<span class="badge">'.$count.'</span><i class="fa fa-shopping-cart"></i>',
-			array('controller'=>'','action'=>''),array('escape'=>false,'class'=>'btn btn-primary nav-btn'));
+			array('controller'=>'carts','action'=>'basket'),array('escape'=>false,'class'=>'btn btn-primary nav-btn'));
 			?>            
         </div>        
     </div>
