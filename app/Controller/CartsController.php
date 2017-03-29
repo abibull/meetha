@@ -78,20 +78,17 @@ class CartsController extends AppController{
 
 	public function basket(){
 		if($this->Session->check('Auth.User')){
-			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => $this->Session->read('Auth.User.id'))));
-			$this->loadModel('Product');
-			$contents = $this->Product->find('all',array('conditions'=>array('id'=>array_values($crtid))));
-			$this->set('contents',$contents);
+			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => $this->Session->read('Auth.User.id'))));			
 		}
 		else{			
-			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => 0)));
-			$this->loadModel('Product');
-			$contents = $this->Product->find('all' , array('conditions' => array('id' => array_values($crtid))));
-			$this->set('contents',$contents);
+			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => 0)));			
 			#echo '<pre>';
 			#print_r ($contents);
 			#echo '</pre>';	
 		}
+		$this->loadModel('Product');
+		$contents = $this->Product->find('all' , array('conditions' => array('id' => array_values($crtid))));
+		$this->set('contents',$contents);
 	}
 	
 	public function delete($id ){

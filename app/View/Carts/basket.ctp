@@ -9,6 +9,7 @@
 					<form method="post" action="checkout1.html">
 
 						<h1>Shopping cart</h1>
+						<?php if(!empty($contents)) : ?>
 						<p class="text-muted">You currently have 3 item(s) in your cart.</p>
 						<div class="table-responsive">
 							<table class="table">
@@ -22,7 +23,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php foreach($contents as $content)  : ?>
+									<?php 
+									
+									foreach($contents as $content)  : ?>
 									<tr>
 										<td>                                                                                                    
 											<?php 
@@ -55,7 +58,9 @@
 
 						</div>
 						<!-- /.table-responsive -->
-
+						<?php else : ?>
+						<h4>Nothing Add in Cart</h4>
+						<?php endif;?>
 						<div class="box-footer">
 							<div class="pull-left">								
 								<?php echo $this->Html->link('<i class="fa fa-chevron-left"></i> Continue shopping',array('controller'=>'products','action'=>'index'),array('escape'=>false,'class'=>'btn btn-default'));?>
