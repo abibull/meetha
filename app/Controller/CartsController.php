@@ -15,9 +15,6 @@ class CartsController extends AppController{
         #$this->Cookie->httpOnly = true;
         $this->Cookie->type('aes');
 		
-		
-		
-		
     }
 
 	
@@ -49,17 +46,13 @@ class CartsController extends AppController{
 ################################# Show Number of items in Carts ##########################################
 
     public function showitemsincart(){
+		// Only accessible via requestAction()	
 		
 		######################### Delete data which have older by 45 days from carts #####################
 		$this->Cart->query('Delete from carts where modified < date_sub(now(),interval 45 day);');
-		
-		// Only accessible via requestAction()		
-						
-		if($this->Session->check('Auth.User')) {				
-			$authuserid = $this->Session->read('Auth.User.id');			
-			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id ' => $authuserid)));
-			$countdata = sizeof($cartdata);			
-			return $countdata;						
+					
+		if($this->Session->check('Auth.User')) {							
+			$countforcart = $this->Cart->find('count', array('fields' => 'DISTINCT product_id','conditions' => array('user_id' => $this->Session->read('Auth.User.id'))));						
 		}
 		else{   
 			$ckvals = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));   ####ckval holds cookies values
@@ -67,27 +60,27 @@ class CartsController extends AppController{
 				if( !$this->Cookie->check($ckval['Cart']['ck_val']) ){
 					$this->Cart->delete($ckval['Cart']['id']);
 				}												
-			}
-			$cartdata = $this->Cart->find('all',array('conditions'=>array('user_id' => 0)));
-			$countdata = sizeof($cartdata);				
-			return $countdata;					
-		}		     
+			}			
+			$countforcart = $this->Cart->find('count', array('fields' => 'DISTINCT product_id','conditions' => array('user_id' => 0)));							
+		}		
+		return $countforcart;
     }
 	
 ############################## BASKET ############################	
 
 	public function basket(){
 		if($this->Session->check('Auth.User')){
-			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => $this->Session->read('Auth.User.id'))));			
+			$prdtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => $this->Session->read('Auth.User.id'))));			
 		}
 		else{			
-			$crtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => 0)));			
+			$prdtid = $this->Cart->find('list', array('fields'=> array('product_id') , 'conditions' => array('user_id' => 0)));			
 			#echo '<pre>';
 			#print_r ($contents);
 			#echo '</pre>';	
 		}
 		$this->loadModel('Product');
-		$contents = $this->Product->find('all' , array('conditions' => array('id' => array_values($crtid))));
+		$contents = $this->Product->find('all' , array('conditions' => array('id' => array_values($prdtid))));
+		$this->set('count_prdt',sizeof($contents));
 		$this->set('contents',$contents);
 	}
 	

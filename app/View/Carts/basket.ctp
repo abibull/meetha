@@ -1,3 +1,7 @@
+<?php echo $this->Html->script('jquery', FALSE);?>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
 <div id="all">
 
 	<div id="content">
@@ -5,12 +9,10 @@
 			<div class="col-md-9" id="basket">
 
 				<div class="box">
-
-					<form method="post" action="checkout1.html">
-
-						<h1>Shopping cart</h1>
+					<?php echo $this->Form->create();?>
+						<h2>Shopping cart</h2>
 						<?php if(!empty($contents)) : ?>
-						<p class="text-muted">You currently have 3 item(s) in your cart.</p>
+						<p class="text-muted">You currently have <?php echo $count_prdt;?> item(s) in your cart.</p>
 						<div class="table-responsive">
 							<table class="table">
 								<thead>
@@ -23,9 +25,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php 
-									
-									foreach($contents as $content)  : ?>
+									<?php foreach($contents as $content)  : ?>
 									<tr>
 										<td>                                                                                                    
 											<?php 
@@ -33,16 +33,15 @@
 												echo $this->Html->link($img,array('controller'=>'products','action'=>'detail',$content['Product']['id']),array('escape'=>false,'class'=>''));
 											?>                                               
 										</td>
-										<td><?php echo $content['Product']['title'];?>
+										<td><?php echo $content['Product']['title'];?></td>
+										<td>										
+											<?php echo $this->Form->input('quantity',array('label'=>false,'class'=>'form-control','type'=>'number','id'=>'quant','value'=>1));?>
 										</td>
-										<td>
-											<input type="number" value="2" class="form-control">
-										</td>
-										<td><?php echo $content['Product']['price'];?></td>
-										<td>$0.00</td>
-										<td>$246.00</td>
-										<td>
-										<!--a href="#"><i class="fa fa-trash-o"></i></a-->
+										<td id="idprc"><?php echo $content['Product']['price'];?></td>
+										<td>0.00</td>
+										
+										<td id="total"></td>
+										<td>										
 										<?php echo $this->Html->link('<span class="fa fa-trash-o"></span>',array('controller'=>'Carts','action'=>'delete',$content['Product']['id']),array('escape'=>false));?>
 										</td>
 									</tr>
@@ -51,7 +50,7 @@
 								<tfoot>
 									<tr>
 										<th colspan="5">Total</th>
-										<th colspan="2">$446.00</th>
+										<th colspan="2">446.00</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -59,7 +58,7 @@
 						</div>
 						<!-- /.table-responsive -->
 						<?php else : ?>
-						<h4>Nothing Add in Cart</h4>
+						<p class="text-muted">You currently have <?php echo $count_prdt;?> item(s) in your cart.</p>
 						<?php endif;?>
 						<div class="box-footer">
 							<div class="pull-left">								
@@ -70,9 +69,8 @@
 								<button type="submit" class="btn btn-primary">Proceed to checkout <i class="fa fa-chevron-right"></i>
 								</button>
 							</div>
-						</div>
-
-					</form>
+						</div>	
+					<?php echo $this->Form->end();?>
 
 				</div>
 				<!-- /.box -->				
@@ -92,11 +90,11 @@
 							<tbody>
 								<tr>
 									<td>Order subtotal</td>
-									<th>$446.00</th>
+									<th>446.00</th>
 								</tr>
 								<tr>
 									<td>Shipping and handling</td>
-									<th>$10.00</th>
+									<th>10.00</th>
 								</tr>
 								<tr>
 									<td>Tax</td>
@@ -104,7 +102,7 @@
 								</tr>
 								<tr class="total">
 									<td>Total</td>
-									<th>$456.00</th>
+									<th>456.00</th>
 								</tr>
 							</tbody>
 						</table>
@@ -141,3 +139,23 @@
 	<!-- /#content -->
 </div>
     <!-- /#all -->
+
+<script>
+$(document).ready(function(){
+
+	$('#quant').load('carts/basket',function(){
+	var a = $('#quant').val();
+	var b = $("#idprc").text();
+	var total = a * b;
+	$('#total').text(total);
+	});
+	
+	$("#quant").change(function(){
+		var a = $('#quant').val();
+		var b = $("#idprc").text();
+		var total = a * b;
+		$('#total').text(total);
+	});
+	
+});
+</script>	
